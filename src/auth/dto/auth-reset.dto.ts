@@ -1,9 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { IsEmail, IsStrongPassword } from 'class-validator';
-export class AuthLoginDTO {
-  @IsEmail()
-  email: string;
+import { IsJWT, IsStrongPassword } from 'class-validator';
 
+export class AuthResetDTO {
   @IsStrongPassword({
     minLength: 6,
     minLowercase: 1,
@@ -11,4 +9,7 @@ export class AuthLoginDTO {
     minSymbols: 1,
   })
   password: string;
+
+  @IsJWT()
+  token: string;
 }
