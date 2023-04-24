@@ -17,7 +17,7 @@ export class CustomersService {
   async createCustomer(customerCreateUserDTO: CreateCustomerDTO) {
     const newCustomer = {
       ...customerCreateUserDTO,
-      password: await bcrypt.hash(customerCreateUserDTO.email, 10),
+      password: await bcrypt.hash(customerCreateUserDTO.password, 10),
     };
 
     const createdCustomer = this.customerRepository.create(newCustomer);
@@ -53,7 +53,10 @@ export class CustomersService {
     }
   }
 
-  async update(id: number, updatedPutCustomer: UpdatePUTCustomerDTO) {
+  async update(
+    id: number,
+    { name, email, password, role }: UpdatePUTCustomerDTO,
+  ) {
     const customer = await this.customerRepository.findOne({
       where: { id: id },
     });
@@ -63,8 +66,14 @@ export class CustomersService {
         `Usuário com o id ${id} não foi encontrado!!!`,
       );
     }
+    const salt = await bcrypt.genSalt();
 
-    await this.customerRepository.update({ id: id }, updatedPutCustomer);
+    password = await bcrypt.hash(password, salt);
+
+    await this.customerRepository.update(
+      { id: id },
+      { name, email, password, role },
+    );
 
     return {
       message: 'Usuário atualizado com sucesso!!!',

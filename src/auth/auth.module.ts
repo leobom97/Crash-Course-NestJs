@@ -1,19 +1,21 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { CustomersModule } from 'src/customers/customers.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Customers } from 'src/customers/entities/customer.entity';
 
 @Module({
   imports: [
     JwtModule.register({
-      secret: 'g5&KyS-IV8i]#huyN@]fRRMCigX5~R0%',
+      secret: process.env.JWT_SECRET,
     }),
-    CustomersModule,
-    TypeOrmModule,
+    forwardRef(() => CustomersModule),
+    TypeOrmModule.forFeature([Customers]),
   ],
   providers: [AuthService],
   controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}

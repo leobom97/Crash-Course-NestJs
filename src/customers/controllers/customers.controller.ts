@@ -11,6 +11,7 @@ import {
   Put,
   Delete,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { CustomersService } from '../services/customers.service';
@@ -18,8 +19,13 @@ import { CreateCustomerDTO } from '../dto/CreateCustomer.dto';
 import { UpdatePUTCustomerDTO } from '../dto/UpdatePutCustomer.dto';
 import { LogInterceptor } from 'src/interceptors/log.interceptor';
 import { ParamId } from 'src/decorators/param-id.decorator';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
+import { RoleGuard } from 'src/guard/role.guard';
+import { AuthGuard } from 'src/guard/auth.guard';
 
-//@UseInterceptors(LogInterceptor)
+@Roles(Role.Admin)
+@UseGuards(AuthGuard, RoleGuard)
 @Controller('customers')
 export class CustomersController {
   constructor(private readonly customerService: CustomersService) {}

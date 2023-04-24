@@ -1,10 +1,13 @@
 /* eslint-disable prettier/prettier */
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
+import { Role } from 'src/enums/role.enum';
 
 export class CreateCustomerDTO {
   @IsNotEmpty()
@@ -23,4 +26,8 @@ export class CreateCustomerDTO {
     minSymbols: 1,
   })
   password: string;
+
+  @IsOptional()
+  @IsEnum(Role)
+  role: number;
 }
